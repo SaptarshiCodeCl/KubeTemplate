@@ -1,38 +1,26 @@
-import express from "express";
 import mongoose from 'mongoose';
 
-const app = express();
-app.set('trust proxy', true); //needed step since this is behind the nginx ingress controller
-app.use(express.json());
+import { app } from './app';
 
+const start = async () => {
+  if (!process.env.JWT_KEY) {
+    throw new Error('JWT_KEY must be defined');
+  }
 
-app.get('/api/users/currentuser', (req, res) => {
-	res.send('Hi there');
-})
+  try {
+    await mongoose.connect('mongodb://auth-mongo-srv:27017/auth', {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useCreateIndex: true
+    });
+    console.log('Connected to MongoDb');
+  } catch (err) {
+    console.error(err);
+  }
 
-const startup = async () => {
-	try {
-		/**
-		 * This is harmless now
-		 */
-		await mongoose.connect('mongodb://auth-mongo-srv:27017/auth', {
-			useNewUrlParser: true,
-			useUnifiedTopology: true,
-			useCreateIndex: true
-		});
-		
-	} catch (error) {
-		
-		console.log(error);
-	}
+  app.listen(3000, () => {
+    console.log('Listening on port 3000!!!!!!!!');
+  });
+};
 
-	app.listen(3000, () => {
-		console.log(`listening on port 3000!!!`);
-	});
-}
-
-startup();
-
-
-
-
+start();
