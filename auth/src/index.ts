@@ -2,8 +2,9 @@ import express from "express";
 import mongoose from 'mongoose';
 
 const app = express();
-
+app.set('trust proxy', true); //needed step since this is behind the nginx ingress controller
 app.use(express.json());
+
 
 app.get('/api/users/currentuser', (req, res) => {
 	res.send('Hi there');
