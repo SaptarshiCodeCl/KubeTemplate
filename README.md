@@ -41,3 +41,9 @@ kubectl describe pod <yourpodname>
 ```sh
 kubctl rollout restart deployment <yourdeplfile>
 ```
+
+```sh
+
+kubectl pod_name port-forward worldport:pod_port
+
+```
