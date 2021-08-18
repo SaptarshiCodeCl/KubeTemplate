@@ -10,7 +10,8 @@ const stan = nats.connect(
 
 stan.on('connect', () => {
     console.log('listening from NATS')
-    const subscription = stan.subscribe('ticket:created');
+    const options = stan.subscriptionOptions().setManualAckMode(true).setDeliverAllAvailable().setDurableName('sample-listener');
+    const subscription = stan.subscribe('ticket:created', options);
 
     subscription.on('message', (data : Message) => {
         console.log(data.getData())
