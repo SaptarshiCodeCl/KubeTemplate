@@ -1,20 +1,21 @@
 import nats from 'node-nats-streaming';
 
-const client = nats.connect('ticketing', 'abc', {
-    url : 'http://localhost:4222'
+console.clear();
+
+const stan = nats.connect('ticketing', 'abc', {
+  url: 'http://localhost:4222',
 });
 
-client.on('connect', ()=> {
-    console.log('publisher connected to nats')
+stan.on('connect', () => {
+  console.log('Publisher connected to NATS');
 
-    const data = {
-        id: '123',
-        title: 'concert',
-        price: 20
-    }
+  const data = JSON.stringify({
+    id: '123',
+    title: 'concert',
+    price: 20,
+  });
 
-   const parsedData = JSON.stringify(data);
-    client.publish('ticket:created', parsedData, () => {
-        console.log('Event published')
-    })
-})
+  stan.publish('ticket:created', data, () => {
+    console.log('Event published');
+  });
+});
